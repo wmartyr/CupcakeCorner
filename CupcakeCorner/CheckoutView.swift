@@ -10,6 +10,8 @@ import SwiftUI
 struct CheckoutView: View {
     @State private var confirmationMessage = ""
     @State private var showingConfirmation = false
+    @State private var errorMessage = ""
+    @State private var showingError = false
     
     var order = Order()
     
@@ -43,6 +45,11 @@ struct CheckoutView: View {
         } message: {
             Text(confirmationMessage)
         }
+        .alert("Error", isPresented: $showingError) {
+            Button("Ok") {}
+        } message: {
+            Text(errorMessage)
+        }
     }
     
     func placeOrder() async {
@@ -62,7 +69,8 @@ struct CheckoutView: View {
             confirmationMessage = "Your order for \(decodedOrder.quantity) x \(Order.types[decodedOrder.type].lowercased()) cupcakes is on its way!"
             showingConfirmation = true
         } catch {
-            print("Checkout failed: \(error.localizedDescription)")
+            errorMessage = "Your order failed with error \(error.localizedDescription)"
+            showingError = true
         }
     }
 }
