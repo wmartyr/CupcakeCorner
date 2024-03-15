@@ -8,11 +8,30 @@
 import SwiftUI
 
 struct AddressView: View {
+    @Bindable var order = Order()
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack {
+            Form {
+                Section {
+                    TextField("Name", text: $order.name)
+                    TextField("Street Address", text: $order.streetAddress)
+                    TextField("City", text: $order.city)
+                    TextField("Zip", text: $order.zip)
+                }
+                Section {
+                    NavigationLink("Checkout") {
+                        CheckoutView(order: order)
+                    }
+                }
+                .disabled(order.hasValidAddress == false)
+            }
+            .navigationTitle("Delivery Details")
+            .navigationBarTitleDisplayMode(.inline)
+        }
     }
 }
 
 #Preview {
-    AddressView()
+    AddressView(order: Order())
 }
